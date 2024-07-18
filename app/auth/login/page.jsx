@@ -32,7 +32,7 @@ export default function page() {
             <div className='flex items-center justify-center border-b-[1px] border-white/70 '>
             <input
                 type="text"
-                className="bg-transparent placeholder:text-white/80 placeholder:text-sm focus:outline-none text-white/80 text-sm"
+                className="bg-transparent border-none placeholder:text-white/80 placeholder:text-sm focus:outline-none text-white/80 text-sm"
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -43,7 +43,7 @@ export default function page() {
             <div className='flex items-center justify-center border-b-[1px] border-white/70 '>
             <input
                 type="text"
-                className="bg-transparent placeholder:text-white/80 placeholder:text-sm focus:outline-none text-white/80 text-sm"
+                className="bg-transparent border-none placeholder:text-white/80 placeholder:text-sm focus:outline-none text-white/80 text-sm"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
