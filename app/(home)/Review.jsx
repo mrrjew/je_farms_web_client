@@ -7,7 +7,7 @@ export default function Review() {
       <section className="text-center py-12">
         <h2 className="text-3xl font-bold mb-4">Customer Reviews</h2>
         <p className="mb-8">See what our customers are saying</p>
-        <div className="flex justify-center items-center space-x-8">
+        <div className="flex max-sm:flex-col max-sm:gap-4 justify-center items-center space-x-8">
           <div className="bg-gray-100 p-4 rounded-lg shadow-md">
             <p className="font-semibold">Alice</p>
             <p>★★★★★</p>

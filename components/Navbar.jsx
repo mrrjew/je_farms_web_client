@@ -9,7 +9,7 @@ import { usePathname } from 'next/navigation'
 export default function Navbar() {
     const pathname = usePathname()
   return (
-    <Disclosure as="div" className={`${pathname.includes("auth") ? "hidden" : "block"} bg-green sticky top-0`}>
+    <Disclosure as="div" className={`${pathname.includes("auth") ? "hidden" : "block"} bg-green sticky top-0 z-20`}>
       <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="flex items-center px-2 lg:px-0">

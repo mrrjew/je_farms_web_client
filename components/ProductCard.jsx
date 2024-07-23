@@ -28,11 +28,11 @@ export default function ProductCard({product}) {
           alt={name}
           layout="fill"
           objectFit="cover"
-          className="rounded-lg -z-1"
+          className="rounded-lg"
         />
       </div>
 
-      <div className="flex justify-between px-2">
+      <div className="flex justify-between px-2 py-2">
         <div className="">
           <p className="text-lg">{name}</p>
           <p className="text-md text-gray-900/70">{price}</p>
