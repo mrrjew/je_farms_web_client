@@ -5,6 +5,7 @@ import Benfits from "./(home)/Benefits";
 import Reviews from "./(home)/Review";
 import Bottom from "./(home)/Bottom";
 
+
 export default function page() {
   return (
     <div>
@@ -13,6 +14,7 @@ export default function page() {
       <Benfits />
       <Reviews />
       <Bottom />
+     
     </div>
   );
 }
