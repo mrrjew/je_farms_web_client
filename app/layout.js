@@ -1,5 +1,6 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 import { DM_Serif_Display } from "next/font/google";
 
@@ -17,7 +18,10 @@ export default function RootLayout({ children }) {
       <Navbar />
 
         {children}
+        <Footer />
+        
         </body>
+        
     </html>
   );
 }

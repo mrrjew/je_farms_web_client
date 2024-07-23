@@ -39,8 +39,8 @@ export default function About() {
 
         {/* hero text */}
         <div className="flex flex-col items-center gap-2.5 z-10">
-          <h2 className="text-xl  text-white font-bold">Home / About Us</h2>
-          <button className="bg-lime-400/40 text-white px-4 py-2 rounded-lg mt-4 w-1/3">
+          <h2 className="text-xl  text-white font-italics">Home / About Us</h2>
+          <button className="bg-lime-400/40 text-white px-4 py-2 rounded-lg mt-4">
             Shop Now
           </button>
         </div>
@@ -54,9 +54,9 @@ export default function About() {
 
       {/* About Us Section */}
       <section className="container mx-auto py-12">
-        <h2 className="text-4xl font-bold text-center mb-8">
-          Learn about our journey in{" "}
-          <span className="text-green-700">Coconut Plantation</span>
+        <h2 className="text-4xl font-bold text-left mb-8">
+          Learn about our journey in{" "}<br />
+          <span className="text-lime-600">Coconut Plantation</span>
         </h2>
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="md:w-1/2 p-4">
@@ -83,7 +83,7 @@ export default function About() {
       <section className="text-center py-12">
         <h2 className="text-3xl font-bold mb-4">Customer Reviews</h2>
         <p className="mb-8">See what our customers are saying</p>
-        <div className="flex justify-center items-center space-x-8">
+        <div className="flex justify-center max-sm:flex-col max-sm:gap-4 items-center space-x-8">
           <div className="bg-gray-100 p-4 rounded-lg shadow-md">
             <p className="font-semibold">Alice</p>
             <p>★★★★★</p>
@@ -99,19 +99,6 @@ export default function About() {
           More
         </button>
       </section>
-
-      {/* Footer Section */}
-      <footer className="text-center py-4 bg-gray-800 text-white">
-        <p>© J.E Farm. All rights Reserved.</p>
-        <div className="flex justify-center space-x-4 mt-2">
-          <a href="#" className="hover:underline">
-            Terms and Conditions
-          </a>
-          <a href="#" className="hover:underline">
-            Privacy Policy
-          </a>
-        </div>
-      </footer>
     </div>
   );
 }
