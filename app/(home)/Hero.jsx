@@ -1,3 +1,4 @@
+
 "use client"
 import ProductCard from "@/components/ProductCard";
 
@@ -49,7 +50,11 @@ export default function Hero() {
             <ProductCard product={product}/>
           ))
         }
+        
       </div>
     </div>
+
+    
   );
 }
+

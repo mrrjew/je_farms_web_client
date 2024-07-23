@@ -28,7 +28,7 @@ export default function ProductCard({product}) {
           alt={name}
           layout="fill"
           objectFit="cover"
-          className="rounded-lg"
+          className="rounded-lg -z-1"
         />
       </div>
 
