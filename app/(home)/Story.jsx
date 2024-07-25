@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Story() {
   return (
-    <div className="min-h-screen bg-white mt-16 -mb-40 text-gray-800">
+    <div className="min-h-screen bg-white mt-16 -mb-80 text-gray-800">
       <section className="text-center py-12">
         <div className="flex items-center justify-between w-[60%] mx-auto">
           <div>

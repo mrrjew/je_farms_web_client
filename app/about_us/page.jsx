@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
+import Review from '@/app/(home)/Review'
 
 export default function About() {
     const products = [
@@ -48,57 +49,41 @@ export default function About() {
 
       <div className="w-full flex max-sm:grid max-sm:grid-cols-2 max-sm:items-center max-sm:mt-4 justify-center gap-6 sm:-mt-10 px-2 md:px-20">
         {products.map((product) => (
-          <ProductCard product={product} />
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
 
       {/* About Us Section */}
-      <section className="container mx-auto py-12">
-        <h2 className="text-4xl font-bold text-left mb-8">
+      <section className="container mx-auto my-10 py-12 w-full sm:w-[50%] flex max-lg:flex-col items-center">
+        <div>
+        <h2 className="text-4xl font-bold text-left mb-2">
           Learn about our journey in{" "}<br />
           <span className="text-lime-600">Coconut Plantation</span>
         </h2>
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="md:w-1/2 p-4">
-            <p className="text-lg mb-4">
-              Lorem ipsum dolor sitamet consectetur. Nisi dolor quisque rhoncus
-              habitasse ultrices tempor sagittis elit fermentum. Imperdiet arcu
-              rhoncus metus tellus mattis gravida mattis quis. Tempus accumsan
-              malesuada dui condimentum neque posuere vitae ultricies lacinia.
-              Enim posuere mattis lacus vestibulum ac facilisis tempus nunc.
-            </p>
-          </div>
-          <div className="md:w-1/2 p-4">
-            <Image
-              src="/path-to-your-farmer-image.jpg"
-              width={400}
-              height={500}
-              alt="Farmer"
-            />
+        <div className="flex flex-col">
+          <div className="p-4">
+          <p className="text-lg mb-4 w-full sm:w-2/3">
+      At JE Farms, our journey in coconut plantation began with a passion for sustainable farming and a commitment to quality. Over the years, we have cultivated a rich heritage of coconut farming, embracing traditional methods while integrating modern agricultural practices. Our plantations are located in fertile regions, where the climate and soil conditions are ideal for growing premium coconuts.
+
+    </p>
           </div>
         </div>
+        </div>
+          <div className="w-full h-80 p-1 relative ">
+          <div className="absolute w-full h-40 bottom-0 mx-auto bg-[#04BAD4]/20"></div>
+            <Image
+              src="/assets/images/man.png"
+              layout="fill"
+              objectFit="cover"
+              alt="Farmer"
+              className=""
+            />
+          </div>
+        
       </section>
 
       {/* Customer Reviews Section */}
-      <section className="text-center py-12">
-        <h2 className="text-3xl font-bold mb-4">Customer Reviews</h2>
-        <p className="mb-8">See what our customers are saying</p>
-        <div className="flex justify-center max-sm:flex-col max-sm:gap-4 items-center space-x-8">
-          <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-            <p className="font-semibold">Alice</p>
-            <p>★★★★★</p>
-            <p>Excellent quality and taste!</p>
-          </div>
-          <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-            <p className="font-semibold">Bob</p>
-            <p>★★★★★</p>
-            <p>Love the variety of coconut products here</p>
-          </div>
-        </div>
-        <button className="mt-8 px-6 py-2 bg-green-500 text-white rounded-lg">
-          More
-        </button>
-      </section>
+      <Review/>
     </div>
   );
 }

@@ -1,13 +1,30 @@
 
 "use client"
-
+import React,{useState,useEffect} from 'react'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { usePathname } from 'next/navigation'
+import Link from "next/link"
 
 export default function Navbar() {
-    const pathname = usePathname()
+  const pathname = usePathname()
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = window.localStorage.getItem("token");
+      setIsLoggedIn(!!token);
+    }
+  }, []);
+
+  const logout = () => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem("token"); 
+      setIsLoggedIn(false);
+    }
+  };
+
   return (
     <Disclosure as="div" className={`${pathname.includes("auth") ? "hidden" : "block"} bg-green sticky top-0 z-20`}>
       <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
@@ -82,7 +99,10 @@ export default function Navbar() {
               <XMarkIcon aria-hidden="true" className="hidden h-6 w-6 group-data-[open]:block" />
             </DisclosureButton>
           </div>
-          <div className="hidden lg:ml-4 lg:block">
+          
+          {
+            isLoggedIn ? (
+              <div className="hidden lg:ml-4 lg:block">
             <div className="flex items-center">
               <button
                 type="button"
@@ -121,14 +141,21 @@ export default function Navbar() {
                     </a>
                   </MenuItem>
                   <MenuItem>
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
+                    <button onClick={logout} className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
                       Sign out
-                    </a>
+                    </button>
                   </MenuItem>
                 </MenuItems>
               </Menu>
             </div>
           </div>
+            ):(
+              <div className='flex gap-2 max-lg:hidden'>
+                <Link className="text-slate-50 py-2 px-4" href="/auth/signin">Log in</Link>
+                <Link className="text-slate-50 py-2 px-4 bg-lime-300/50 rounded-md" href="/auth/signup">Sign up</Link>
+              </div>
+            )
+          }
         </div>
       </div>
 
@@ -171,7 +198,9 @@ export default function Navbar() {
             Location
           </DisclosureButton>
         </div>
-        <div className="border-t border-slate-200 pb-3 pt-4">
+         {
+          isLoggedIn ? (
+            <div className="border-t border-slate-200 pb-3 pt-4">
           <div className="flex items-center px-5">
             <div className="flex-shrink-0">
               <img
@@ -210,13 +239,20 @@ export default function Navbar() {
             </DisclosureButton>
             <DisclosureButton
               as="a"
-              href="#"
-              className="block rounded-md px-3 py-2 text-base font-medium text-slate-100 hover:bg-green-700 hover:text-white"
+              onClick={logout}
+              className="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-slate-100 hover:bg-green-700 hover:text-white"
             >
               Sign out
             </DisclosureButton>
           </div>
         </div>
+          ):(
+            <div className='flex gap-2 border-t border-slate-200 pb-3 pt-4'>
+                <Link className="text-slate-50 py-2 px-4" href="/auth/signin">Log in</Link>
+                <Link className="text-slate-50 py-2 px-4 bg-lime-300/50 rounded-md" href="/auth/signup">Sign up</Link>
+            </div>
+          )
+         }
       </DisclosurePanel>
     </Disclosure>
   )

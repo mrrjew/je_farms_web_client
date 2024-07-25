@@ -47,7 +47,7 @@ export default function Hero() {
       <div className="w-full flex max-sm:grid max-sm:grid-cols-2 max-sm:items-center max-sm:mt-4 justify-center gap-6 sm:-mt-10 px-2 md:px-20">
         {
           products.map((product) => (
-            <ProductCard product={product}/>
+            <ProductCard key={product.id} product={product}/>
           ))
         }
         

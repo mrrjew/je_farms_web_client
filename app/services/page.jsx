@@ -12,8 +12,8 @@ export default function page() {
 
         {/* hero text */}
         <div className="flex flex-col items-center gap-2.5 z-10">
-          <h2 className="text-xl  text-white font-bold">Services</h2>
-          <button className="bg-lime-400/40 text-white px-4 py-2 rounded-lg mt-4 w-1/3">
+          <h2 className="text-xl  text-white font-italics">Home / Services</h2>
+          <button className="bg-lime-400/40 text-white px-4 py-2 rounded-lg mt-4 ">
             Shop Now
           </button>
         </div>
@@ -24,10 +24,7 @@ export default function page() {
           <div className="text-center mb-8">
             <h2 className="text-4xl font-bold">Our Services</h2>
             <p className="mt-4 max-w-2xl mx-auto text-gray-600">
-              Lorem ipsum dolor sit amet consectetur. Aliquet a vulputate ut et
-              euismod. Eu condimentum et dui id turpis. Lectus commodo leo ut in
-              sed fermentum pellentesque ac. Imperdiet quisque et hendrerit non
-              feugiat luctus.
+            Je Farms is an online retailer specializing in the sale of fresh coconuts. They offer a convenient and reliable service for customers looking to purchase high-quality coconuts without the hassle of visiting a physical store. Je Farms sources their coconuts from sustainable farms, ensuring that each nut is harvested at the peak of ripeness and freshness. Their online platform allows customers to easily browse and select the coconuts they desire, with options for whole coconuts, coconut water, and coconut meat. Je Farms takes pride in their commitment to customer satisfaction, offering prompt delivery and a satisfaction guarantee on all orders. By providing a seamless online shopping experience for coconut enthusiasts, Je Farms has become a trusted name in the world of coconut e-commerce.
             </p>
           </div>
 
@@ -109,24 +106,6 @@ export default function page() {
           </div>
         </section>
       </main>
-
-      <footer className="bg-gray-800 text-white p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          <p>&copy; J.E Farm. All rights reserved.</p>
-          <ul className="flex space-x-4">
-            <li>
-              <a href="/terms" className="hover:underline">
-                Terms and Conditions
-              </a>
-            </li>
-            <li>
-              <a href="/privacy" className="hover:underline">
-                Privacy Policy
-              </a>
-            </li>
-          </ul>
-        </div>
-      </footer>
     </div>
   );
 }
