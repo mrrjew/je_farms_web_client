@@ -3,7 +3,7 @@
 import React,{useState,useEffect} from 'react'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, BellIcon, XMarkIcon,ShoppingCartIcon } from '@heroicons/react/24/outline'
 import { usePathname } from 'next/navigation'
 import Link from "next/link"
 
@@ -111,7 +111,19 @@ export default function Navbar() {
                 <span className="absolute -inset-1.5" />
                 <span className="sr-only">View notifications</span>
                 <BellIcon aria-hidden="true" className="h-6 w-6" />
+
               </button>
+
+              <Link
+                href="/cart"
+                className="relative flex-shrink-0 rounded-full p-1 mx-2 text-white hover:text-gray focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+              >
+                <span className="absolute -inset-1.5" />
+                <span className="sr-only">View cart</span>
+                <ShoppingCartIcon aria-hidden="true" className="h-6 w-6 " />
+
+              </Link>
+
 
               {/* Profile dropdown */}
               <Menu as="div" className="relative ml-4 flex-shrink-0">
@@ -151,7 +163,7 @@ export default function Navbar() {
           </div>
             ):(
               <div className='flex gap-2 max-lg:hidden'>
-                <Link className="text-slate-50 py-2 px-4" href="/auth/signin">Log in</Link>
+                <Link className="text-slate-50 py-2 px-4" href="/auth/login">Log in</Link>
                 <Link className="text-slate-50 py-2 px-4 bg-lime-300/50 rounded-md" href="/auth/signup">Sign up</Link>
               </div>
             )
@@ -248,7 +260,7 @@ export default function Navbar() {
         </div>
           ):(
             <div className='flex gap-2 border-t border-slate-200 pb-3 pt-4'>
-                <Link className="text-slate-50 py-2 px-4" href="/auth/signin">Log in</Link>
+                <Link className="text-slate-50 py-2 px-4" href="/auth/login">Log in</Link>
                 <Link className="text-slate-50 py-2 px-4 bg-lime-300/50 rounded-md" href="/auth/signup">Sign up</Link>
             </div>
           )

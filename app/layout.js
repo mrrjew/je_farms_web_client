@@ -1,7 +1,7 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ReduxProvider from "@/reduxProvider";
+import ReduxProvider from "@/utils/reduxProvider.jsx";
 
 import { DM_Serif_Display } from "next/font/google";
 

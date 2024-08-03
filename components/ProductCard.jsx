@@ -5,9 +5,11 @@ export default function ProductCard({product}) {
     const {_id, tag,image, name, price} = product
 
     const [isFavorite,setIsFavorite] = useState(false)
+    const [isAddedToCart,setIsAddedToCart] = useState(false)
 
     const addToCart = (_id) => {
     //  add to cart functionality
+    setIsAddedToCart((prev) => !prev)
     console.log(isFavorite)
     }
 
@@ -40,12 +42,21 @@ export default function ProductCard({product}) {
 
         <div className="flex reltive bottom-0 gap-1">
           <button onClick={() => addToCart(_id)}>
-            <Image
+            {!isAddedToCart ? (
+              <Image
               src="/assets/icons/cart.png"
               alt="cart"
               width={20}
               height={20}
             />
+            ): (
+              <Image
+              src="/assets/icons/tick1.png"
+              alt="cart"
+              width={40}
+              height={40}
+            />
+            )} 
           </button>
           <button onClick={() => addToFavorites(_id)}>
             {isFavorite ? (

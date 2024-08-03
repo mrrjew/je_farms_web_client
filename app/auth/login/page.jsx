@@ -8,7 +8,6 @@ import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginUser } from '@/redux/auth/auth.reducer'; 
 import 'react-toastify/dist/ReactToastify.css';
-import { useRouter } from 'next/navigation';
 
 
 const toastOptions = {
@@ -27,28 +26,29 @@ export default function Page() {
     const [password, setPassword] = useState('');
   
 
-  const navigate = useRouter()
   const dispatch = useDispatch();
-  const { error, loading, success } = useSelector((state) => state.auth);
+  const { error,errorMessage, loading, success } = useSelector((state) => state.auth);
 
     useEffect(() => {
       if (error) {
-        toast.error("Error signing in.", toastOptions);
+        toast.error(errorMessage, toastOptions);
       } else if (success) {
         toast.success("Signed in successfully", toastOptions);
-        navigate.push("/")
+        if(window !== undefined){
+          window.location.href = "/"
+        }
 
       }
     }, [error, success]);
 
     const handleSubmit = (e) => {
       e.preventDefault();
-      const formData = { username, email, password };
+      const formData = { email, password };
 
     try {
       dispatch(LoginUser(formData));
     } catch (err) {
-      toast.error("Failed to sign in. Please try again.", toastOptions);
+      toast.error(err, toastOptions);
     }
     };
 
@@ -89,7 +89,7 @@ export default function Page() {
             </div>
 
             <button type="submit" className='rounded-full bg-[#326B23] text-white p-2 px-16 mt-6'>
-                login
+                {loading ? "Please wait..." : "Login"}
             </button>
 
             <div className='flex w-full mt-4 items-center justify-between text-white text-sm'> 
