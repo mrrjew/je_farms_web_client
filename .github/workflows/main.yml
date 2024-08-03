@@ -1,37 +1,23 @@
 name: Firebase Deployment
+
 on:
   push:
     branches:
       - main
+
 jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2.3.2
-      - name: Install Dependencies
-        run: npm install      
-      - name: Build
-        env:
-          CI: false        
-      - name: Archive Production Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: build
-          path: build
   deploy:
-    name: Deploy
-    needs: build
+    name: Deploy to Firebase
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2.3.2
-      - name: Download Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: build
-          path: build
+        
+      # Optional: If your project doesn't require a build step, you might not need to install dependencies.
+      # If dependencies are needed, uncomment the following line:
+      # - name: Install Dependencies
+      #   run: npm install
+
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:

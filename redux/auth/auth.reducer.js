@@ -35,7 +35,9 @@ export const RegisterUser = createAsyncThunk('user/register', async(data,thunkAP
           }
 
           const result = await response.json();
-          localStorage.setItem('token', result.token);
+          if(window !== undefined){
+            localStorage.setItem('token', result.token); 
+          }
           return result;
     }catch(error){
         return thunkAPi.rejectWithValue(`Error creating user: ${error}`) 
@@ -57,7 +59,9 @@ export const LoginUser = createAsyncThunk('user/login', async(data,thunkAPi) => 
           }
 
           const result = await response.json();
-          localStorage.setItem('token', result.token); 
+          if(window !== undefined){
+            localStorage.setItem('token', result.token); 
+          }
           return result;
     }catch(error){
         return thunkAPi.rejectWithValue(`Error logging user in: ${error}`) 
