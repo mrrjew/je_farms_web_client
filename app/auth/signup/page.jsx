@@ -7,8 +7,8 @@ import Link from 'next/link';
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { RegisterUser } from '@/redux/auth/auth.reducer'; 
-import 'react-toastify/dist/ReactToastify.css';
 import { createCart } from '../../../redux/cart/cart.slice';
+import 'react-toastify/dist/ReactToastify.css';
 
 const toastOptions = {
   position: "top-right",
@@ -26,29 +26,35 @@ export default function Page() {
   const [password, setPassword] = useState('');
 
   const dispatch = useDispatch();
-  const { error, loading, success,user } = useSelector((state) => state.auth);  
-  const { id } = useSelector((state) => state.cart);  
+  const { error, loading, success, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (error) {
       toast.error("Error signing up.", toastOptions);
     } else if (success) {
-      console.log(user.id)
-      dispatch(createCart(+user.id))
-      toast.success("Signed up successfully", toastOptions);
-
-      if(typeof window !== undefined){
-        window.location.href = "/"
-      }
+      handleSuccess();
     }
   }, [error, success]);
+
+  const handleSuccess = async () => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("token", user.token);
+
+      // Dispatch createCart and wait for it to complete
+      await dispatch(createCart({ token: localStorage.getItem("token"), id: user.id }));
+
+      // Navigate after dispatching
+      window.location.href = "/";
+      toast.success("Signed up successfully", toastOptions);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = { username, email, password };
 
     try {
-      dispatch(RegisterUser(formData));  
+      dispatch(RegisterUser(formData));
     } catch (err) {
       toast.error("Failed to sign up. Please try again.", toastOptions);
     }
@@ -92,7 +98,7 @@ export default function Page() {
           {loading ? "Please wait..." : "Sign up"}
         </button>
 
-        <div className='flex w-full mt-4 items-center justify-center text-white text-sm'> 
+        <div className='flex w-full mt-4 items-center justify-center text-white text-sm'>
           <Link href="/auth/login" className='hover:text-[#326B23]'>Already have an account?</Link>
         </div>
       </form>
@@ -103,6 +109,7 @@ export default function Page() {
   );
 }
 
+// Input Field Component
 const InputField = ({ type, placeholder, value, onChange, icon }) => (
   <div className='flex items-center justify-center border-b-[1px] border-white/70'>
     <input

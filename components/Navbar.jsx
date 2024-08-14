@@ -5,12 +5,15 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { Bars3Icon, BellIcon, XMarkIcon,ShoppingCartIcon } from '@heroicons/react/24/outline'
 import { usePathname } from 'next/navigation'
+import { useDispatch,useSelector } from 'react-redux'
+import { getCart } from '@/redux/cart/cart.slice'
 import Link from "next/link"
 
 export default function Navbar() {
   const pathname = usePathname()
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const dispatch = useDispatch()
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const token = window.localStorage.getItem("token");
@@ -22,8 +25,20 @@ export default function Navbar() {
     if (typeof window !== 'undefined') {
       window.localStorage.removeItem("token"); 
       setIsLoggedIn(false);
+      typeof window !== 'undefined' ? window.location.reload(): null; // Remove from localStorage
     }
   };
+
+  const { items: products } = useSelector((state) => state.cart);
+
+  const id = typeof window !== 'undefined' ? localStorage.getItem("cartId") : null;
+  const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
+
+  useEffect(() => {
+    if (token && id) {
+      dispatch(getCart({ token, id }));
+    }
+  }, [dispatch, token, id]);
 
   return (
     <Disclosure as="div" className={`${pathname.includes("auth") ? "hidden" : "block"} bg-green sticky top-0 z-20`}>
@@ -120,6 +135,7 @@ export default function Navbar() {
               >
                 <span className="absolute -inset-1.5" />
                 <span className="sr-only">View cart</span>
+                <p className="absolute bottom-0 right-0 top-4 px-1 bg-red-500 pb-0 rounded-full text-white text-xs text-center font-bold">{products?.length}</p>
                 <ShoppingCartIcon aria-hidden="true" className="h-6 w-6 " />
 
               </Link>

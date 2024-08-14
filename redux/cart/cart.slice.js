@@ -3,7 +3,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // API and token constants
 const API = "https://je-farms-engine.onrender.com";
-const token = localStorage.getItem("token");
 
 // Initial state of the cart
 const initialState = {
@@ -14,7 +13,7 @@ const initialState = {
 };
 
 // Async thunks for handling async operations
-export const getCart = createAsyncThunk('cart/getCart', async (id, { rejectWithValue }) => {
+export const getCart = createAsyncThunk('cart/getCart', async ({token,id}, { rejectWithValue }) => {
   try {
     const response = await fetch(`${API}/cart/${+id}`,{
       method:"GET",
@@ -31,7 +30,7 @@ export const getCart = createAsyncThunk('cart/getCart', async (id, { rejectWithV
     return rejectWithValue(error.message);
   }
 });
-export const createCart = createAsyncThunk('cart/createCart', async (id, { rejectWithValue }) => {
+export const createCart = createAsyncThunk('cart/createCart', async ({token,id}, { rejectWithValue }) => {
   try {
     const response = await fetch(`${API}/cart/create`, {
       method: 'POST',
@@ -57,15 +56,16 @@ export const createCart = createAsyncThunk('cart/createCart', async (id, { rejec
   }
 });
 
-export const addToCart = createAsyncThunk('cart/addToCart', async (productData, { rejectWithValue }) => {
+export const addToCart = createAsyncThunk('cart/addToCart', async ({token,productData}, { rejectWithValue }) => {
   try {
+    console.log(token,productData)
     const response = await fetch(`${API}/cart/add-product`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify(productData),
+      body: JSON.stringify({...productData,cartId:+productData.cartId}),
     });
     if (!response.ok) throw new Error('Network response was not ok');
     const data = await response.json();
@@ -75,12 +75,9 @@ export const addToCart = createAsyncThunk('cart/addToCart', async (productData, 
   }
 });
 
-export const removeFromCart = createAsyncThunk('cart/removeFromCart', async (productId, { rejectWithValue }) => {
+export const removeFromCart = createAsyncThunk('cart/removeFromCart', async ({token,cartId,productId}, { rejectWithValue }) => {
   try {
-    let cartId;
-    if(typeof window !== undefined){
-      cartId = +window.localStorage.getItem("cartId")
-    }
+
 
     const response = await fetch(`${API}/cart/remove-product/${cartId}/${productId}`, {
       method: 'DELETE',
@@ -95,7 +92,7 @@ export const removeFromCart = createAsyncThunk('cart/removeFromCart', async (pro
   }
 });
 
-export const clearCart = createAsyncThunk('cart/clearCart', async (_, { getState, rejectWithValue }) => {
+export const clearCart = createAsyncThunk('cart/clearCart', async (token, { getState, rejectWithValue }) => {
   const state = getState();
   try {
     await Promise.all(
@@ -160,7 +157,7 @@ const cartSlice = createSlice({
       })
       .addCase(removeFromCart.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.items = state.items.filter(item => item.id !== action.payload);
+        state.items =  action.payload;
       })
       .addCase(removeFromCart.rejected, (state, action) => {
         state.status = 'failed';

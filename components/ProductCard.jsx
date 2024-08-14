@@ -1,15 +1,18 @@
-import { removeFromCart, addToCart } from '@/redux/cart/cart.slice';
+"use client";
+
+import { removeFromCart, addToCart} from '@/redux/cart/cart.slice';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 export default function ProductCard({ product }) {
   const { id, tag, href, name, price } = product;
 
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [isAddedToCart, setIsAddedToCart] = useState(false);
+  const storedCartStatus = localStorage.getItem(`cart-${id}`);
 
-  // Get cartId from localStorage on mount
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isAddedToCart, setIsAddedToCart] = useState(storedCartStatus === 'true');
+
   const [cartPayload, setCartPayload] = useState({
     cartId: typeof window !== 'undefined' ? +localStorage.getItem("cartId") : null,
     productId: +id,
@@ -18,20 +21,37 @@ export default function ProductCard({ product }) {
   });
 
   const dispatch = useDispatch();
-  const { status } = useSelector(state => state.cart);
+  const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
+
+  useEffect(() => {
+    // Initialize isAddedToCart from localStorage
+    setIsAddedToCart(storedCartStatus === 'true');
+
+    // Initialize cartPayload
+    setCartPayload(prev => ({
+      ...prev,
+      cartId: typeof window !== 'undefined' ? +localStorage.getItem("cartId") : null
+    }));
+  }, [id, price]);
+
+  useEffect(() => {
+    if (isAddedToCart) {
+      dispatch(addToCart({ token, productData: cartPayload }));
+      typeof window !== 'undefined' ? localStorage.setItem(`cart-${id}`, 'true'): null; // Store in localStorage
+
+    } else {
+      dispatch(removeFromCart({ token, cartId: typeof window !== 'undefined' ? +localStorage.getItem("cartId") : null, productId: +id }));
+      typeof window !== 'undefined' ? localStorage.removeItem(`cart-${id}`): null; // Remove from localStorage
+    }
+  }, [isAddedToCart, cartPayload, dispatch, id, token]);
 
   const handleAddToCart = () => {
-    setIsAddedToCart(prev => !prev);
-    dispatch(addToCart(cartPayload));
-  };
+    // Fetch latest cart state from the store
+    setIsAddedToCart(prev => !prev); // Toggle state
 
-  // useEffect(() => {
-  //   if (isAddedToCart) {
-  //     console.log(cartPayload)
-  //   } else {
-  //     dispatch(removeFromCart(id));
-  //   }
-  // }, [isAddedToCart, cartPayload, dispatch, id]);
+    typeof window !== 'undefined' ? window.location.reload(): null; // Remove from localStorage
+
+  };
 
   const handleToggleFavorite = () => {
     setIsFavorite(prev => !prev);
@@ -55,23 +75,23 @@ export default function ProductCard({ product }) {
       <div className="flex justify-between px-2 py-2">
         <div>
           <p className="text-lg">{name}</p>
-          <p className="text-md text-gray-900/70">{price}</p>
+          <p className="text-md text-gray-900/70">${price.toFixed(2)}</p>
         </div>
 
         <div className="flex gap-1">
-          <button onClick={handleAddToCart}>
+          <button onClick={handleAddToCart} aria-label={isAddedToCart ? "Remove from cart" : "Add to cart"}>
             <Image
               src={isAddedToCart ? "/assets/icons/tick1.png" : "/assets/icons/cart.png"}
-              alt="cart"
+              alt={isAddedToCart ? "Added to cart" : "Add to cart"}
               width={isAddedToCart ? 40 : 20}
               height={isAddedToCart ? 40 : 20}
             />
           </button>
-          <button onClick={handleToggleFavorite}>
+          <button onClick={handleToggleFavorite} aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}>
             {isFavorite ? (
               <Image
                 src="/assets/icons/star.png"
-                alt="favorite"
+                alt="Favorite"
                 width={20}
                 height={20}
               />

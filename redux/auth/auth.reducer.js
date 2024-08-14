@@ -1,3 +1,4 @@
+
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 const API="https://je-farms-engine.onrender.com"
@@ -35,9 +36,7 @@ export const RegisterUser = createAsyncThunk('user/register', async(data,thunkAP
           }
 
           const result = await response.json();
-          if(typeof window !== undefined){
-            localStorage.setItem('token', result.token); 
-          }
+
           return result;
     }catch(error){
         return thunkAPi.rejectWithValue(`Error creating user: ${error}`) 
@@ -59,9 +58,6 @@ export const LoginUser = createAsyncThunk('user/login', async(data,thunkAPi) => 
           }
 
           const result = await response.json();
-          if(typeof window !== undefined){
-            localStorage.setItem('token', result.token); 
-          }
           return result;
     }catch(error){
         return thunkAPi.rejectWithValue(`Error logging user in: ${error}`) 

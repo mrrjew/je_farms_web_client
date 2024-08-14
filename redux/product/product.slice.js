@@ -3,7 +3,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // API and token constants
 const API = "https://je-farms-engine.onrender.com";
-const token = localStorage.getItem("token");
 
 // Initial state of the product
 const initialState = {
@@ -25,7 +24,7 @@ export const getProducts = createAsyncThunk('get/products', async () => {
   }
 });
 
-export const createProduct = createAsyncThunk('product/createProduct', async (cartData, { rejectWithValue }) => {
+export const createProduct = createAsyncThunk('product/createProduct', async ({token,cartData}, { rejectWithValue }) => {
   try {
     const response = await fetch(`${API}/product/create`, {
       method: 'POST',
@@ -43,7 +42,7 @@ export const createProduct = createAsyncThunk('product/createProduct', async (ca
   }
 });
 
-export const addToProduct = createAsyncThunk('product/addToProduct', async (productData, { rejectWithValue }) => {
+export const addToProduct = createAsyncThunk('product/addToProduct', async ({token,productData}, { rejectWithValue }) => {
   try {
     const response = await fetch(`${API}/product/add-product`, {
       method: 'POST',
@@ -61,7 +60,7 @@ export const addToProduct = createAsyncThunk('product/addToProduct', async (prod
   }
 });
 
-export const removeFromProduct = createAsyncThunk('product/removeFromProduct', async (productId, { rejectWithValue }) => {
+export const removeFromProduct = createAsyncThunk('product/removeFromProduct', async ({token,productId}, { rejectWithValue }) => {
   try {
     const response = await fetch(`${API}/product/remove-product/${productId}`, {
       method: 'POST',
@@ -76,7 +75,7 @@ export const removeFromProduct = createAsyncThunk('product/removeFromProduct', a
   }
 });
 
-export const clearProduct = createAsyncThunk('product/clearProduct', async (_, { getState, rejectWithValue }) => {
+export const clearProduct = createAsyncThunk('product/clearProduct', async (token, { getState, rejectWithValue }) => {
   const state = getState();
   try {
     await Promise.all(
