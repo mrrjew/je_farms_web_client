@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 
-export default function page() {
+export default function Page() {
 
   const dispatch = useDispatch()
   const {items:products,status} = useSelector((state) => state.product)
