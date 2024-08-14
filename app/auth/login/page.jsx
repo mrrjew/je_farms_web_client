@@ -57,7 +57,7 @@ export default function Page() {
   };
 
   return (
-    <div className='flex max-md:flex-col items-center justify-center w-full h-full absolute top-0 left-0 bg-gradient-to-tr from-[#326B23]/70 at-[50%] to-[#79513E]/70 max-md:px-20'>
+    <div className='flex max-md:flex-col items-center justify-center w-full h-full absolute top-0 left-0 bg-gradient-to-tr from-[#326B23]/70 at-[50%] to-[#79513E]/70 px-6'>
       <div className='w-1/4 h-auto relative max-md:mb-28 hidden md:flex max-md:runded-full'>
         <Image src="/assets/images/coco_login1.png" alt='coco' width={200} height={100} className='ml-2 w-[1000px] lg:mt-[138px] z-10 rounded-2xl'/>
         <Image src='/assets/images/coco_overlay.png' alt='coco' width={1000} height={100} className='absolute w-max h-max top-0 transform rotate-90'/>
