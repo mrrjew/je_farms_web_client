@@ -3,77 +3,57 @@
 
 import { CheckIcon, ClockIcon, QuestionMarkCircleIcon, XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid'
 import Upload from "../../../utils/imageUpload"
-import { removeFromCart } from '../../../redux/cart/cart.slice'
+import { getCart, removeFromCart } from '../../../redux/cart/cart.slice'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
 
-const products = [
-  {
-    id: 1,
-    name: 'Basic Tee',
-    href: '#',
-    price: '$32.00',
-    color: 'Sienna',
-    inStock: true,
-    size: 'Large',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in sienna.",
-  },
-  {
-    id: 2,
-    name: 'Basic Tee',
-    href: '#',
-    price: '$32.00',
-    color: 'Black',
-    inStock: false,
-    leadTime: '3–4 weeks',
-    size: 'Large',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-02.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-  },
-  {
-    id: 3,
-    name: 'Nomad Tumbler',
-    href: '#',
-    price: '$35.00',
-    color: 'White',
-    inStock: true,
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-03.jpg',
-    imageAlt: 'Insulated bottle with white base and black snap lid.',
-  },
-]
-const relatedProducts = [
-  {
-    id: 1,
-    name: 'Billfold Wallet',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-related-product-01.jpg',
-    imageAlt: 'Front of Billfold Wallet in natural leather.',
-    price: '$118',
-    color: 'Natural',
-  },
-  // More products...
-]
 
 export default function Cart() {
+  
+  const dispatch = useDispatch()
+  const {items:products} = useSelector((state) => state.cart)
+  const relatedProducts = products?.slice(1) ?? []
+
+  let id;
+  if(typeof window !== undefined){
+    id = localStorage.getItem("cartId")
+  }
+  
+  useEffect(() => {
+    dispatch(getCart(+id))
+  },[])
+  
+  console.log(id) 
+
+  const RemoveFromCart = (id) => {
+    dispatch(removeFromCart(id))
+    if(typeof window !== undefined){
+      window.location.reload()
+    }
+  }
+
+  const subTotal = products?.reduce((acc,product) => acc + product.product.price, 0)
 
   return (
     <div className="bg-white">
-      <Upload/>
       <main className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Shopping Cart</h1>
 
-        <form className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
+        {
+          products?.length != 0 ? (
+            <form className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
           <section aria-labelledby="cart-heading" className="lg:col-span-7">
             <h2 id="cart-heading" className="sr-only">
               Items in your shopping cart
             </h2>
 
             <ul role="list" className="divide-y divide-gray-200 border-b border-t border-gray-200">
-              {products.map((product, productIdx) => (
+              {products?.map((product, productIdx) => (
                 <li key={product.id} className="flex py-6 sm:py-10">
                   <div className="flex-shrink-0">
                     <img
-                      alt={product.imageAlt}
-                      src={product.imageSrc}
+                      alt={product.product.name}
+                      src={product.product.href}
                       className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
                     />
                   </div>
@@ -83,8 +63,8 @@ export default function Cart() {
                       <div>
                         <div className="flex justify-between">
                           <h3 className="text-sm">
-                            <a href={product.href} className="font-medium text-gray-700 hover:text-gray-800">
-                              {product.name}
+                            <a href="#" className="font-medium text-gray-700 hover:text-gray-800">
+                              {product.product.name}
                             </a>
                           </h3>
                         </div>
@@ -94,7 +74,7 @@ export default function Cart() {
                             <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">{product.size}</p>
                           ) : null}
                         </div>
-                        <p className="mt-1 text-sm font-medium text-gray-900">{product.price}</p>
+                        <p className="mt-1 text-sm font-medium text-gray-900">${product.price}</p>
                       </div>
 
                       <div className="mt-4 sm:mt-0 sm:pr-9">
@@ -117,7 +97,7 @@ export default function Cart() {
                         </select>
 
                         <div className="absolute right-0 top-0">
-                          <button type="button" onClick={removeFromCart(product.id)} className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500">
+                          <button type="button" onClick={() => RemoveFromCart(product.product.id)} className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500">
                             <span className="sr-only">Remove</span>
                             <XMarkIconMini aria-hidden="true" className="h-5 w-5" />
                           </button>
@@ -132,7 +112,7 @@ export default function Cart() {
                         <ClockIcon aria-hidden="true" className="h-5 w-5 flex-shrink-0 text-gray-300" />
                       )}
 
-                      <span>{product.inStock ? 'In stock' : `Ships in ${product.leadTime}`}</span>
+                      <span>{product.inStock ? 'In stock' : `Delivers in 12 hours`}</span>
                     </p>
                   </div>
                 </li>
@@ -152,7 +132,7 @@ export default function Cart() {
             <dl className="mt-6 space-y-4">
               <div className="flex items-center justify-between">
                 <dt className="text-sm text-gray-600">Subtotal</dt>
-                <dd className="text-sm font-medium text-gray-900">$99.00</dd>
+                <dd className="text-sm font-medium text-gray-900">${subTotal}</dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                 <dt className="flex items-center text-sm text-gray-600">
@@ -162,7 +142,7 @@ export default function Cart() {
                     <QuestionMarkCircleIcon aria-hidden="true" className="h-5 w-5" />
                   </a>
                 </dt>
-                <dd className="text-sm font-medium text-gray-900">$5.00</dd>
+                <dd className="text-sm font-medium text-gray-900">${Math.floor(0.05 * +subTotal,2)}</dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                 <dt className="flex text-sm text-gray-600">
@@ -172,11 +152,11 @@ export default function Cart() {
                     <QuestionMarkCircleIcon aria-hidden="true" className="h-5 w-5" />
                   </a>
                 </dt>
-                <dd className="text-sm font-medium text-gray-900">$8.32</dd>
+                <dd className="text-sm font-medium text-gray-900">${Math.floor(0.07 * +subTotal,2)}</dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                 <dt className="text-base font-medium text-gray-900">Order total</dt>
-                <dd className="text-base font-medium text-gray-900">$112.32</dd>
+                <dd className="text-base font-medium text-gray-900">${Math.floor(0.12 * +subTotal,2) + subTotal}</dd>
               </div>
             </dl>
 
@@ -190,15 +170,22 @@ export default function Cart() {
             </div>
           </section>
         </form>
+          ):(
+            <>
+        <h1 className="text-xl text-center my-8 font-bold tracking-tight text-gray-900 sm:text-4xl">No products added to Cart</h1>
+             
+            </>
+          )
+        }
 
         {/* Related products */}
-        <section aria-labelledby="related-heading" className="mt-24">
+        <section aria-labelledby="related-heading" className="hidden mt-24">
           <h2 id="related-heading" className="text-lg font-medium text-gray-900">
             You may also like&hellip;
           </h2>
 
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            {relatedProducts.map((relatedProduct) => (
+            {relatedProducts?.map((relatedProduct) => (
               <div key={relatedProduct.id} className="group relative">
                 <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 lg:h-80">
                   <img

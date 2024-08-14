@@ -5,61 +5,47 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 const API = "https://je-farms-engine.onrender.com";
 const token = localStorage.getItem("token");
 
-// Initial state of the cart
+// Initial state of the product
 const initialState = {
-  id:0,
-  items: [], // Array to hold cart items
+  items: [], // Array to hold product items
   status: 'idle', // Status of async operations
   error: null, // Error message if any
 };
 
 // Async thunks for handling async operations
-export const getCart = createAsyncThunk('cart/getCart', async (id, { rejectWithValue }) => {
+export const getProducts = createAsyncThunk('get/products', async () => {
   try {
-    const response = await fetch(`${API}/cart/${+id}`,{
-      method:"GET",
-      headers:{
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      }
-    });
+    const response = await fetch(`${API}/product/all`);
 
     if (!response.ok) throw new Error('Network response was not ok');
     const data = await response.json();
     return data;
   } catch (error) {
-    return rejectWithValue(error.message);
+    return error.message;
   }
 });
-export const createCart = createAsyncThunk('cart/createCart', async (id, { rejectWithValue }) => {
+
+export const createProduct = createAsyncThunk('product/createProduct', async (cartData, { rejectWithValue }) => {
   try {
-    const response = await fetch(`${API}/cart/create`, {
+    const response = await fetch(`${API}/product/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify({userId:+id}),
+      body: JSON.stringify(cartData),
     });
-
     if (!response.ok) throw new Error('Network response was not ok');
-
-    
     const data = await response.json();
-    
-    if(typeof window !== undefined){
-      window.localStorage.setItem("cartId",data.id)
-    }
-
     return data;
   } catch (error) {
     return rejectWithValue(error.message);
   }
 });
 
-export const addToCart = createAsyncThunk('cart/addToCart', async (productData, { rejectWithValue }) => {
+export const addToProduct = createAsyncThunk('product/addToProduct', async (productData, { rejectWithValue }) => {
   try {
-    const response = await fetch(`${API}/cart/add-product`, {
+    const response = await fetch(`${API}/product/add-product`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -75,17 +61,12 @@ export const addToCart = createAsyncThunk('cart/addToCart', async (productData, 
   }
 });
 
-export const removeFromCart = createAsyncThunk('cart/removeFromCart', async (productId, { rejectWithValue }) => {
+export const removeFromProduct = createAsyncThunk('product/removeFromProduct', async (productId, { rejectWithValue }) => {
   try {
-    let cartId;
-    if(typeof window !== undefined){
-      cartId = +window.localStorage.getItem("cartId")
-    }
-
-    const response = await fetch(`${API}/cart/remove-product/${cartId}/${productId}`, {
-      method: 'DELETE',
+    const response = await fetch(`${API}/product/remove-product/${productId}`, {
+      method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`, 
+        'Authorization': `Bearer ${token}`,
       },
     });
     if (!response.ok) throw new Error('Network response was not ok');
@@ -95,12 +76,12 @@ export const removeFromCart = createAsyncThunk('cart/removeFromCart', async (pro
   }
 });
 
-export const clearCart = createAsyncThunk('cart/clearCart', async (_, { getState, rejectWithValue }) => {
+export const clearProduct = createAsyncThunk('product/clearProduct', async (_, { getState, rejectWithValue }) => {
   const state = getState();
   try {
     await Promise.all(
-      state.cart.items.map(item =>
-        fetch(`${API}/cart/remove-product/${item.id}`, {
+      state.product.items.map(item =>
+        fetch(`${API}/product/remove-product/${item.id}`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -115,65 +96,64 @@ export const clearCart = createAsyncThunk('cart/clearCart', async (_, { getState
 });
 
 // Create the slice
-const cartSlice = createSlice({
-  name: 'cart',
+const productSlice = createSlice({
+  name: 'product',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(createCart.pending, (state) => {
+      .addCase(getProducts.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(createCart.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.id = action.payload.id
-        state.items = action.payload.cartProducts;
-      })
-      .addCase(createCart.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      })
-      .addCase(getCart.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(getCart.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.items = action.payload.cartProducts;   
-      })
-      .addCase(getCart.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      })
-      .addCase(addToCart.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(addToCart.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.items = action.payload.cartProducts;
-      })
-      .addCase(addToCart.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      })
-      .addCase(removeFromCart.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(removeFromCart.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.items = state.items.filter(item => item.id !== action.payload);
-      })
-      .addCase(removeFromCart.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      })
-      .addCase(clearCart.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(clearCart.fulfilled, (state, action) => {
+      .addCase(getProducts.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.items = action.payload;
       })
-      .addCase(clearCart.rejected, (state, action) => {
+      .addCase(getProducts.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(createProduct.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(createProduct.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.items = action.payload;
+      })
+      .addCase(createProduct.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(addToProduct.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(addToProduct.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.items = action.payload;
+      })
+      .addCase(addToProduct.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(removeFromProduct.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(removeFromProduct.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.items = state.items.filter(item => item.id !== action.payload);
+      })
+      .addCase(removeFromProduct.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(clearProduct.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(clearProduct.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.items = action.payload;
+      })
+      .addCase(clearProduct.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });
@@ -181,7 +161,7 @@ const cartSlice = createSlice({
 });
 
 // Export actions
-export const {} = cartSlice.actions;
+export const {} = productSlice.actions;
 
 // Export reducer
-export default cartSlice.reducer;
+export default productSlice.reducer;

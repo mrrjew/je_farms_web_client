@@ -34,7 +34,7 @@ export default function Page() {
         toast.error(errorMessage, toastOptions);
       } else if (success) {
         toast.success("Signed in successfully", toastOptions);
-        if(window !== undefined){
+        if(typeof window !== undefined){
           window.location.href = "/"
         }
 

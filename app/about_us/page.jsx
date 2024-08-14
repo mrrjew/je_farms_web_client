@@ -4,31 +4,18 @@ import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import Review from '@/app/(home)/Review'
+import { getProducts } from "@/redux/product/product.slice";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function About() {
-    const products = [
-      {
-        id: 1,
-        tag: "Popular",
-        image: "/assets/images/coco1.png",
-        name: "King Coconut",
-        price: "$100.00",
-      },
-      {
-        id: 2,
-        tag: "Best Selling",
-        image: "/assets/images/coco2.jpg",
-        name: "Indonesia Coconut",
-        price: "$150.00",
-      },
-      {
-        id: 3,
-        tag: "New",
-        image: "/assets/images/coco3.jpg",
-        name: "Dwarf Coconut",
-        price: "$200.00",
-      },
-    ];
+  const dispatch = useDispatch()
+  const {items:products,status} = useSelector((state) => state.product)
+
+  useEffect(() => {
+    dispatch(getProducts())
+    console.log(products,status)
+  },[])
 
   return (
     <div className="min-h-screen bg-white text-gray-800">
@@ -41,9 +28,7 @@ export default function About() {
         {/* hero text */}
         <div className="flex flex-col items-center gap-2.5 z-10">
           <h2 className="text-xl  text-white font-italics">Home / About Us</h2>
-          <button className="bg-lime-400/40 text-white px-4 py-2 rounded-lg mt-4">
-            Shop Now
-          </button>
+          <Link href="/products" className="bg-lime-400/40 text-white px-4 py-2 rounded-lg mt-4 w-max">Shop Now</Link>
         </div>
       </div>
 

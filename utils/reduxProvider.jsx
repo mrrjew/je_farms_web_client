@@ -7,7 +7,7 @@ import React from 'react';
 export default function ReduxProvider({ children }) {
     return (
         <Provider store={store}>
-            {children}
+               {children}
         </Provider>
     );
 }

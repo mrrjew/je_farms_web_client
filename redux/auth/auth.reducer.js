@@ -35,7 +35,7 @@ export const RegisterUser = createAsyncThunk('user/register', async(data,thunkAP
           }
 
           const result = await response.json();
-          if(window !== undefined){
+          if(typeof window !== undefined){
             localStorage.setItem('token', result.token); 
           }
           return result;
@@ -59,7 +59,7 @@ export const LoginUser = createAsyncThunk('user/login', async(data,thunkAPi) => 
           }
 
           const result = await response.json();
-          if(window !== undefined){
+          if(typeof window !== undefined){
             localStorage.setItem('token', result.token); 
           }
           return result;

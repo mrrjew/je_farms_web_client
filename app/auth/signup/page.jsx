@@ -26,16 +26,18 @@ export default function Page() {
   const [password, setPassword] = useState('');
 
   const dispatch = useDispatch();
-  const { error, loading, success,user } = useSelector((state) => state.auth);
+  const { error, loading, success,user } = useSelector((state) => state.auth);  
+  const { id } = useSelector((state) => state.cart);  
 
   useEffect(() => {
     if (error) {
       toast.error("Error signing up.", toastOptions);
     } else if (success) {
+      console.log(user.id)
+      dispatch(createCart(+user.id))
       toast.success("Signed up successfully", toastOptions);
 
-      if(window !== undefined){
-        dispatch(createCart(user.id))
+      if(typeof window !== undefined){
         window.location.href = "/"
       }
     }
@@ -46,7 +48,7 @@ export default function Page() {
     const formData = { username, email, password };
 
     try {
-      dispatch(RegisterUser(formData));
+      dispatch(RegisterUser(formData));  
     } catch (err) {
       toast.error("Failed to sign up. Please try again.", toastOptions);
     }

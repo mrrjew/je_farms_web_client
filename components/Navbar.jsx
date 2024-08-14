@@ -163,8 +163,8 @@ export default function Navbar() {
           </div>
             ):(
               <div className='flex gap-2 max-lg:hidden'>
-                <Link className="text-slate-50 py-2 px-4" href="/auth/login">Log in</Link>
-                <Link className="text-slate-50 py-2 px-4 bg-lime-300/50 rounded-md" href="/auth/signup">Sign up</Link>
+                <a className="text-slate-50 py-2 px-4" href="/auth/login">Log in</a>
+                <a className="text-slate-50 py-2 px-4 bg-lime-300/50 rounded-md" href="/auth/signup">Sign up</a>
               </div>
             )
           }
@@ -233,6 +233,16 @@ export default function Navbar() {
               <span className="sr-only">View notifications</span>
               <BellIcon aria-hidden="true" className="h-6 w-6" />
             </button>
+
+            <Link
+                href="/cart"
+                className="relative flex-shrink-0 rounded-full p-1 mx-2 text-white hover:text-gray focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+              >
+                <span className="absolute -inset-1.5" />
+                <span className="sr-only">View cart</span>
+                <ShoppingCartIcon aria-hidden="true" className="h-6 w-6 " />
+
+              </Link>
           </div>
           <div className="mt-3 space-y-1 px-2">
             <DisclosureButton
@@ -255,13 +265,13 @@ export default function Navbar() {
               className="block cursor-pointer rounded-md px-3 py-2 text-base font-medium text-slate-100 hover:bg-green-700 hover:text-white"
             >
               Sign out
-            </DisclosureButton>
+            </DisclosureButton> 
           </div>
         </div>
           ):(
             <div className='flex gap-2 border-t border-slate-200 pb-3 pt-4'>
-                <Link className="text-slate-50 py-2 px-4" href="/auth/login">Log in</Link>
-                <Link className="text-slate-50 py-2 px-4 bg-lime-300/50 rounded-md" href="/auth/signup">Sign up</Link>
+                <a className="text-slate-50 py-2 px-4" href="/auth/login">Log in</a>
+                <a className="text-slate-50 py-2 px-4 bg-lime-300/50 rounded-md" href="/auth/signup">Sign up</a>
             </div>
           )
          }

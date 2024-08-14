@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import ProductCard from "@/components/ProductCard";
+import Link from "next/link"
 
 export default function page() {
   return (
@@ -13,9 +13,8 @@ export default function page() {
         {/* hero text */}
         <div className="flex flex-col items-center gap-2.5 z-10">
           <h2 className="text-xl  text-white font-italics">Home / Services</h2>
-          <button className="bg-lime-400/40 text-white px-4 py-2 rounded-lg mt-4 ">
-            Shop Now
-          </button>
+          <Link href="/products" className="bg-lime-400/40 text-white px-4 py-2 rounded-lg mt-4 w-max">Shop Now</Link>
+
         </div>
       </div>
 

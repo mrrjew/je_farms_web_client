@@ -1,32 +1,50 @@
-import Image from 'next/image'
-import React,{useEffect, useState} from 'react'
+import { removeFromCart, addToCart } from '@/redux/cart/cart.slice';
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-export default function ProductCard({product}) {
-    const {_id, tag,image, name, price} = product
+export default function ProductCard({ product }) {
+  const { id, tag, href, name, price } = product;
 
-    const [isFavorite,setIsFavorite] = useState(false)
-    const [isAddedToCart,setIsAddedToCart] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isAddedToCart, setIsAddedToCart] = useState(false);
 
-    const addToCart = (_id) => {
-    //  add to cart functionality
-    setIsAddedToCart((prev) => !prev)
-    console.log(isFavorite)
-    }
+  // Get cartId from localStorage on mount
+  const [cartPayload, setCartPayload] = useState({
+    cartId: typeof window !== 'undefined' ? +localStorage.getItem("cartId") : null,
+    productId: +id,
+    quantity: 1,
+    price: +price
+  });
 
-    const addToFavorites = (_id) => {
-        console.log(isFavorite)
-            setIsFavorite((prev) => !prev)
+  const dispatch = useDispatch();
+  const { status } = useSelector(state => state.cart);
 
-    }
+  const handleAddToCart = () => {
+    setIsAddedToCart(prev => !prev);
+    dispatch(addToCart(cartPayload));
+  };
+
+  // useEffect(() => {
+  //   if (isAddedToCart) {
+  //     console.log(cartPayload)
+  //   } else {
+  //     dispatch(removeFromCart(id));
+  //   }
+  // }, [isAddedToCart, cartPayload, dispatch, id]);
+
+  const handleToggleFavorite = () => {
+    setIsFavorite(prev => !prev);
+  };
 
   return (
     <div className="rounded-lg w-full sm:w-1/5 shadow-lg">
       <div className="relative w-full" style={{ paddingBottom: "100%" }}>
         <p className="bg-slate-100 z-10 absolute top-0 left-0 rounded-md text-slate-900/90 px-4 py-1">
-          {tag}
+          {tag || "NEW"}
         </p>
         <Image
-          src={image}
+          src={href}
           alt={name}
           layout="fill"
           objectFit="cover"
@@ -35,34 +53,25 @@ export default function ProductCard({product}) {
       </div>
 
       <div className="flex justify-between px-2 py-2">
-        <div className="">
+        <div>
           <p className="text-lg">{name}</p>
           <p className="text-md text-gray-900/70">{price}</p>
         </div>
 
-        <div className="flex reltive bottom-0 gap-1">
-          <button onClick={() => addToCart(_id)}>
-            {!isAddedToCart ? (
-              <Image
-              src="/assets/icons/cart.png"
+        <div className="flex gap-1">
+          <button onClick={handleAddToCart}>
+            <Image
+              src={isAddedToCart ? "/assets/icons/tick1.png" : "/assets/icons/cart.png"}
               alt="cart"
-              width={20}
-              height={20}
+              width={isAddedToCart ? 40 : 20}
+              height={isAddedToCart ? 40 : 20}
             />
-            ): (
-              <Image
-              src="/assets/icons/tick1.png"
-              alt="cart"
-              width={40}
-              height={40}
-            />
-            )} 
           </button>
-          <button onClick={() => addToFavorites(_id)}>
+          <button onClick={handleToggleFavorite}>
             {isFavorite ? (
               <Image
                 src="/assets/icons/star.png"
-                alt="cart"
+                alt="favorite"
                 width={20}
                 height={20}
               />
