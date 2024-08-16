@@ -49,6 +49,7 @@ const CartItem = ({ product, onRemove }) => (
           <div className="absolute right-0 top-0">
             <button
               onClick={() => onRemove(product?.product?.id)}
+              type='button'
               className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
             >
               <span className="sr-only">Remove</span>
@@ -121,34 +122,34 @@ const OrderSummary = ({ subTotal }) => (
 export default function Cart() {
   const dispatch = useDispatch();
   const { items: products } = useSelector((state) => state.cart);
-  const { user:{cartId:id}} = useSelector((state) => state.auth);
-
-  console.log(id)
-
-  const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
-
+  const { user: { cartId: id } } = useSelector((state) => state.auth);
+  
+  // Safely access token within useEffect
   useEffect(() => {
-    dispatch(ThisUser(token))
-  },[])
-
-  useEffect(() => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
+    
     if (token && id) {
-      dispatch(getCart({ token, cartId:id }));
+      dispatch(ThisUser(token));
+      dispatch(getCart({ token, cartId: id }));
     }
-  }, [dispatch, token, id]);
+  }, [dispatch, id]);
 
-  const handleRemoveFromCart = (productId) => {
+  const handleRemoveFromCart = async (productId) => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
+
     if (token && id) {
-      dispatch(removeFromCart({ token, cartId: id, productId }));
-      // Optionally dispatch getCart to update the cart state
-      dispatch(getCart({ token, id }));
-      // Reload the page to reflect the updated cart
-      typeof window !== 'undefined' ? window.location.reload() :null;
+      try {
+        await dispatch(removeFromCart({ token, cartId: id, productId }));
+        await dispatch(getCart({ token, cartId: id }));
+      } catch (error) {
+        console.error('Error removing item from cart:', error);
+      }
     }
   };
 
-  const subTotal = Array.isArray(products) ? products?.reduce((acc, product) => acc + product?.product?.price, 0) : 0;
-
+  const subTotal = Array.isArray(products) 
+    ? products.reduce((acc, product) => acc + (product?.product?.price || 0), 0) 
+    : 0;
   return (
     <div className="bg-white">
       <main className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">

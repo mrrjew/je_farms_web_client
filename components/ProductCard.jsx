@@ -17,17 +17,20 @@ export default function ProductCard({ product }) {
   const {user} = useSelector((state) => state.auth)
   
   const [isFavorite, setIsFavorite] = useState(false);
-  const [isAddedToCart, setIsAddedToCart] = useState(!!items.find((item) => item.product.id === product.id));
-
-  useEffect(()=>{
-    dispatch(ThisUser(token))
-  },[token])
+  const [isAddedToCart, setIsAddedToCart] = useState(!!items?.find((item) => item.product.id === product.id));
 
   useEffect(() => {
-    if(token && user){
-      dispatch(getCart({token,cartId:user && user.cartId}))
+    if (token) {
+      dispatch(ThisUser(token));
     }
-  },[dispatch,token,user])
+  }, [dispatch, token]);
+
+  useEffect(() => {
+    if (token && user && user.cartId) {
+      dispatch(getCart({ token, cartId: user.cartId }));
+    }
+  }, [dispatch, token, user]);
+
 
   
 
@@ -42,7 +45,7 @@ export default function ProductCard({ product }) {
       dispatch(addToCart({ token, productData:{cartId: user && user.cartId,...cartPayload }}));
       setIsAddedToCart(true);
     }
-  };
+  };    
 
   const handleToggleFavorite = () => {
     setIsFavorite(prev => !prev);
