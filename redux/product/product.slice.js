@@ -2,7 +2,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // API and token constants
-const API = "https://je-farms-engine.onrender.com";
+const API = "https://je-farms-engine-3riw.onrender.com";
 
 // Initial state of the product
 const initialState = {

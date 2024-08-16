@@ -2,7 +2,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // API and token constants
-const API = "https://je-farms-engine.onrender.com";
+const API = "https://je-farms-engine-3riw.onrender.com";
 
 // Initial state of the cart
 const initialState = {
@@ -13,9 +13,9 @@ const initialState = {
 };
 
 // Async thunks for handling async operations
-export const getCart = createAsyncThunk('cart/getCart', async ({token,id}, { rejectWithValue }) => {
+export const getCart = createAsyncThunk('cart/getCart', async ({token,cartId}, { rejectWithValue }) => {
   try {
-    const response = await fetch(`${API}/cart/${+id}`,{
+    const response = await fetch(`${API}/cart/${cartId}`,{
       method:"GET",
       headers:{
         'Content-Type': 'application/json',
@@ -71,6 +71,7 @@ export const addToCart = createAsyncThunk('cart/addToCart', async ({token,produc
     const data = await response.json();
     return data;
   } catch (error) {
+    console.log(error.message)
     return rejectWithValue(error.message);
   }
 });

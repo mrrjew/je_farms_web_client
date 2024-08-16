@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { RegisterUser } from '@/redux/auth/auth.reducer'; 
-import { createCart } from '../../../redux/cart/cart.slice';
 import 'react-toastify/dist/ReactToastify.css';
 
 const toastOptions = {
@@ -39,9 +38,6 @@ export default function Page() {
   const handleSuccess = async () => {
     if (typeof window !== 'undefined') {
       localStorage.setItem("token", user.token);
-
-      // Dispatch createCart and wait for it to complete
-      await dispatch(createCart({ token: localStorage.getItem("token"), id: user.id }));
 
       // Navigate after dispatching
       window.location.href = "/";

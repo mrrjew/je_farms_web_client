@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CheckIcon, ClockIcon, QuestionMarkCircleIcon, XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid';
 import { getCart, removeFromCart } from '../../../redux/cart/cart.slice';
+import { ThisUser } from '@/redux/auth/auth.reducer';
 
 const CartItem = ({ product, onRemove }) => (
   <li key={product?.id} className="flex py-6 sm:py-10">
@@ -120,20 +121,25 @@ const OrderSummary = ({ subTotal }) => (
 export default function Cart() {
   const dispatch = useDispatch();
   const { items: products } = useSelector((state) => state.cart);
+  const { user:{cartId:id}} = useSelector((state) => state.auth);
 
-  const id = typeof window !== 'undefined' ? localStorage.getItem("cartId") : null;
+  console.log(id)
+
   const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
 
   useEffect(() => {
+    dispatch(ThisUser(token))
+  },[])
+
+  useEffect(() => {
     if (token && id) {
-      dispatch(getCart({ token, id }));
+      dispatch(getCart({ token, cartId:id }));
     }
   }, [dispatch, token, id]);
 
   const handleRemoveFromCart = (productId) => {
     if (token && id) {
       dispatch(removeFromCart({ token, cartId: id, productId }));
-      typeof window !== 'undefined' ? localStorage.removeItem(`cart-${productId}`):null;
       // Optionally dispatch getCart to update the cart state
       dispatch(getCart({ token, id }));
       // Reload the page to reflect the updated cart

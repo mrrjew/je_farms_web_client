@@ -1,13 +1,14 @@
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const API="https://je-farms-engine.onrender.com"
+const API="https://je-farms-engine-3riw.onrender.com"
 
 export const ThisUser = createAsyncThunk('user/profile', async(token,thunkAPi) => {
-    try{
-        const response = await fetch(`${API}/auth/profile`,{
+  try{
+      console.log(token)
+        const response = await fetch(`${API}/auth/profile`, {
             headers:{
-                Authorization : `Bearer ${token}`
+              Authorization : `Bearer ${token}`
             }
         });
 
@@ -45,11 +46,12 @@ export const RegisterUser = createAsyncThunk('user/register', async(data,thunkAP
 
 export const LoginUser = createAsyncThunk('user/login', async(data,thunkAPi) => {
     try{
+      console.log(data)
         const response = await fetch(`${API}/auth/signin`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-            },
+            },  
             body: JSON.stringify(data),
           });
 

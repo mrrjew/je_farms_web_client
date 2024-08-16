@@ -14,7 +14,7 @@ export default function Page() {
   useEffect(() => {
     dispatch(getProducts())
     console.log(products,status)
-  },[])
+  },[dispatch,products])
 
   return(
     <>

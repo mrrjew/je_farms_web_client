@@ -1,56 +1,47 @@
 "use client";
 
-import { removeFromCart, addToCart} from '@/redux/cart/cart.slice';
+import { ThisUser } from '@/redux/auth/auth.reducer';
+import { removeFromCart, addToCart, getCart} from '@/redux/cart/cart.slice';
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 
 export default function ProductCard({ product }) {
   const { id, tag, href, name, price } = product;
 
-  const storedCartStatus = localStorage.getItem(`cart-${id}`);
-
+  
+  const dispatch = useDispatch();
+  const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
+  
+  const {items} = useSelector((state) => state.cart)
+  const {user} = useSelector((state) => state.auth)
+  
   const [isFavorite, setIsFavorite] = useState(false);
-  const [isAddedToCart, setIsAddedToCart] = useState(storedCartStatus === 'true');
+  const [isAddedToCart, setIsAddedToCart] = useState(!!items.find((item) => item.product.id === product.id));
+
+  useEffect(()=>{
+    dispatch(ThisUser(token))
+  },[token])
+
+  useEffect(() => {
+    if(token && user){
+      dispatch(getCart({token,cartId:user && user.cartId}))
+    }
+  },[dispatch,token,user])
+
+  
 
   const [cartPayload, setCartPayload] = useState({
-    cartId: typeof window !== 'undefined' ? +localStorage.getItem("cartId") : null,
     productId: +id,
     quantity: 1,
     price: +price
   });
-
-  const dispatch = useDispatch();
-  const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
-
-  useEffect(() => {
-    // Initialize isAddedToCart from localStorage
-    setIsAddedToCart(storedCartStatus === 'true');
-
-    // Initialize cartPayload
-    setCartPayload(prev => ({
-      ...prev,
-      cartId: typeof window !== 'undefined' ? +localStorage.getItem("cartId") : null
-    }));
-  }, [id, price]);
-
-  useEffect(() => {
-    if (isAddedToCart) {
-      dispatch(addToCart({ token, productData: cartPayload }));
-      typeof window !== 'undefined' ? localStorage.setItem(`cart-${id}`, 'true'): null; // Store in localStorage
-
-    } else {
-      dispatch(removeFromCart({ token, cartId: typeof window !== 'undefined' ? +localStorage.getItem("cartId") : null, productId: +id }));
-      typeof window !== 'undefined' ? localStorage.removeItem(`cart-${id}`): null; // Remove from localStorage
-    }
-  }, [isAddedToCart, cartPayload, dispatch, id, token]);
-
+  
   const handleAddToCart = () => {
-    // Fetch latest cart state from the store
-    setIsAddedToCart(prev => !prev); // Toggle state
-
-    typeof window !== 'undefined' ? window.location.reload(): null; // Remove from localStorage
-
+    if(user && token){
+      dispatch(addToCart({ token, productData:{cartId: user && user.cartId,...cartPayload }}));
+      setIsAddedToCart(true);
+    }
   };
 
   const handleToggleFavorite = () => {
