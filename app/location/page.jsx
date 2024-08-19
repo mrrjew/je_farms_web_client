@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 
-export default function () {
+export default function Location() {
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="w-full flex flex-col items-center relative justify-center py-8 px-2 sm:py-40 bg-[url(/assets/images/hero/hero_image.png)] bg-cover bg-center">
