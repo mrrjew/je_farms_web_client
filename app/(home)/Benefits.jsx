@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function Benefits() {
   return (
     <div>
-      <section className="text-center py-12 ">
+      <section className="text-center py-30 ">
         <h2 className="text-3xl font-bold mb-4">Benefits Of Coconut</h2>
         <p className="mb-8">Discover The Amazing Benefits</p>
         <div className="flex max-sm:flex-col sm:w-[60%] mx-auto gap-4 justify-between items-center space-x-8">
