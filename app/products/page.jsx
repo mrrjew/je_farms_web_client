@@ -75,7 +75,7 @@ export default function Page() {
             ))
           ) : (
             <h2 className="py-20 text-3xl">
-              Can't find search '{`${searchTerm}`}'
+              Can{"\'"}t find search {"\'"}{`${searchTerm}`}{"\'"}
             </h2>
           )}
         </div>
