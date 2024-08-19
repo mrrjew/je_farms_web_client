@@ -109,11 +109,11 @@ export default function Navbar() {
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <MagnifyingGlassIcon aria-hidden="true" className="h-5 w-5 text-gray-400" />
                 </div>
-                <form onSubmit={() => handleSubmit()} className="block">
+                <form onSubmit={(e) => handleSubmit(e)} className="block">
                   <input
                     id="search"
                     name="search"
-                    onChange={() => handleChange()}
+                    onChange={(e) => handleChange(e)}
                     type="search"
                     placeholder="Search"
                     className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-300 placeholder:text-gray-400 focus:bg-white focus:text-gray-900 focus:ring-0 sm:text-sm sm:leading-6"
@@ -142,7 +142,7 @@ export default function Navbar() {
               >
                 <span className="absolute -inset-1.5" />
                 <span className="sr-only">View notifications</span>
-                <p className="absolute bottom-0 right-0 top-4 px-1 bg-red-500 pb-0 rounded-full text-white text-xs text-center font-bold">{products?.length}</p>
+                <p className="absolute bottom-0 right-0 top-4 px-1 bg-red-500 pb-0 rounded-full text-white text-xs text-center font-bold">0</p>
                 <BellIcon aria-hidden="true" className="h-6 w-6" />
 
               </Link>
@@ -265,7 +265,7 @@ export default function Navbar() {
             >
               <span className="absolute -inset-1.5" />
               <span className="sr-only">View notifications</span>
-              <p className="absolute bottom-0 right-0 top-4 px-1 bg-red-500 pb-0 rounded-full text-white text-xs text-center font-bold">{products?.length}</p>
+              <p className="absolute bottom-0 right-0 top-4 px-1 bg-red-500 pb-0 rounded-full text-white text-xs text-center font-bold">0</p>
               <BellIcon aria-hidden="true" className="h-6 w-6" />
             </Link>
 
