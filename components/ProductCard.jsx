@@ -41,10 +41,11 @@ export default function ProductCard({ product }) {
   });
   
   const handleAddToCart = () => {
-    if(user && token){
+    if(user.cartId && token){
       dispatch(addToCart({ token, productData:{cartId: user && user.cartId,...cartPayload }}));
       setIsAddedToCart(true);
     }
+
   };    
 
   const handleToggleFavorite = () => {
@@ -73,7 +74,7 @@ export default function ProductCard({ product }) {
         </div>
 
         <div className="flex gap-1">
-          <button onClick={handleAddToCart} aria-label={isAddedToCart ? "Remove from cart" : "Add to cart"}>
+          <button type="button" onClick={() => handleAddToCart()} aria-label={isAddedToCart ? "Remove from cart" : "Add to cart"}>
             <Image
               src={isAddedToCart ? "/assets/icons/tick1.png" : "/assets/icons/cart.png"}
               alt={isAddedToCart ? "Added to cart" : "Add to cart"}
@@ -81,7 +82,7 @@ export default function ProductCard({ product }) {
               height={isAddedToCart ? 40 : 20}
             />
           </button>
-          <button onClick={handleToggleFavorite} aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}>
+          <button onClick={() => handleToggleFavorite()} aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}>
             {isFavorite ? (
               <Image
                 src="/assets/icons/star.png"

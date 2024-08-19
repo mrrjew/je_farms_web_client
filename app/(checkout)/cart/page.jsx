@@ -1,10 +1,13 @@
 "use client";
 
+import React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CheckIcon, ClockIcon, QuestionMarkCircleIcon, XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid';
 import { getCart, removeFromCart } from '../../../redux/cart/cart.slice';
 import { ThisUser } from '@/redux/auth/auth.reducer';
+import { createOrder } from '@/redux/order/order.slice';
+import { initializePayment } from '@/redux/payment/payment.slice';
 
 const CartItem = ({ product, onRemove }) => (
   <li key={product?.id} className="flex py-6 sm:py-10">
@@ -70,7 +73,7 @@ const CartItem = ({ product, onRemove }) => (
   </li>
 );
 
-const OrderSummary = ({ subTotal }) => (
+const OrderSummary = ({ subTotal,checkout,loading }) => (
   <section
     aria-labelledby="summary-heading"
     className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
@@ -110,10 +113,11 @@ const OrderSummary = ({ subTotal }) => (
     </dl>
     <div className="mt-6">
       <button
-        type="submit"
+        type="button"
+        onClick={() => checkout()}
         className="w-full rounded-md border border-transparent bg-green/80 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-green focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
       >
-        Checkout
+        {loading ? 'Please wait...' : 'Checkout'}
       </button>
     </div>
   </section>
@@ -122,13 +126,16 @@ const OrderSummary = ({ subTotal }) => (
 export default function Cart() {
   const dispatch = useDispatch();
   const { items: products } = useSelector((state) => state.cart);
-  const { user: { cartId: id } } = useSelector((state) => state.auth);
+  const { user: { cartId: id, id:userId, email} } = useSelector((state) => state.auth);
+  const { loading, success, error, data:orderData} = useSelector((state) => state.order);
+  const { success:paymentSuccess, data:paymentData} = useSelector((state) => state.payment);
+
   
   // Safely access token within useEffect
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
     
-    if (token && id) {
+    if (token) {
       dispatch(ThisUser(token));
       dispatch(getCart({ token, cartId: id }));
     }
@@ -150,30 +157,82 @@ export default function Cart() {
   const subTotal = Array.isArray(products) 
     ? products.reduce((acc, product) => acc + (product?.product?.price || 0), 0) 
     : 0;
+
+    const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
+    const checkout = async() => {
+      try{
+        
+       
+          const data = {
+            userId,
+            productIds: products?.map((p) => {return p.productId}),
+            quantity:  products?.length   
+          }
+
+          dispatch(createOrder({token,data}))
+          
+          console.log("order",orderData)
+
+      } catch (error) {
+        console.error('Error creating order:', error);
+      }
+    }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+   useEffect(() => {
+    if(orderData.id){
+      const payload = {
+        email,
+        amount:subTotal,
+        orderId:orderData.id
+      }
+      console.log("payment payload" , payload)
+
+      
+      dispatch(initializePayment({token,payload}))
+      console.log(paymentData)
+    }
+
+    if(paymentData.authorization_url){
+      typeof window !== 'undefined' ? location.href = paymentData.authorization_url : null;
+    }
+   },[dispatch,orderData.id,paymentData.authorization_url])
+
   return (
     <div className="bg-white">
-      <main className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Shopping Cart</h1>
+    <main className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
+      <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        Shopping Cart
+      </h1>
 
-        {products?.length > 0 ? (
+      {/* Conditional Rendering */}
+      {products?.length > 0 ? (
+        <React.Suspense fallback={<h1>Loading...</h1>}>
           <form className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
             <section aria-labelledby="cart-heading" className="lg:col-span-7">
-              <h2 id="cart-heading" className="sr-only">Items in your shopping cart</h2>
+              <h2 id="cart-heading" className="sr-only">
+                Items in your shopping cart
+              </h2>
               <ul role="list" className="divide-y divide-gray-200 border-b border-t border-gray-200">
-                {products?.map(product => (
-                  <CartItem key={product?.id} product={product} onRemove={handleRemoveFromCart} />
+                {products.map(product => (
+                  <CartItem
+                    key={product?.id}
+                    product={product}
+                    onRemove={handleRemoveFromCart}
+                  />
                 ))}
               </ul>
             </section>
 
-            <OrderSummary subTotal={subTotal} />
+            <OrderSummary subTotal={subTotal} checkout={checkout} loading={loading} />
           </form>
-        ) : (
-          <h1 className="text-xl text-center my-8 font-bold tracking-tight text-gray-900 sm:text-4xl">
-            No products added to Cart
-          </h1>
-        )}
-      </main>
-    </div>
+        </React.Suspense>
+      ) : (
+        <h1 className="text-xl text-center my-8 font-bold tracking-tight text-gray-900 sm:text-4xl">
+          No products added to Cart
+        </h1>
+      )}
+    </main>
+  </div>
   );
 }

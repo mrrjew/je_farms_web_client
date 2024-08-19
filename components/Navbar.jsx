@@ -4,7 +4,7 @@ import React,{useState,useEffect} from 'react'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { Bars3Icon, BellIcon, XMarkIcon,ShoppingCartIcon } from '@heroicons/react/24/outline'
-import { usePathname } from 'next/navigation'
+import { usePathname,useRouter } from 'next/navigation'
 import { useDispatch,useSelector } from 'react-redux'
 import { getCart } from '@/redux/cart/cart.slice'
 import Link from "next/link"
@@ -30,6 +30,7 @@ export default function Navbar() {
   };
 
   const { items: products } = useSelector((state) => state.cart);
+  const { user } = useSelector((state) => state.auth);
 
   const id = typeof window !== 'undefined' ? localStorage.getItem("cartId") : null;
   const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
@@ -39,6 +40,19 @@ export default function Navbar() {
       dispatch(getCart({ token, id }));
     }
   }, [dispatch, token, id]);
+
+  const router = useRouter();
+
+  const [regex,setRegex] = useState("")
+
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevent the default form submission
+    router.push(`/products?search=${regex}`); // Redirect to the /products page
+  };
+
+  const handleChange = (e) => {
+    setRegex(e.target.value); // Update the state directly with the new input value
+  };
 
   return (
     <Disclosure as="div" className={`${pathname.includes("auth") ? "hidden" : "block"} bg-green sticky top-0 z-20`}>
@@ -95,13 +109,16 @@ export default function Navbar() {
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <MagnifyingGlassIcon aria-hidden="true" className="h-5 w-5 text-gray-400" />
                 </div>
-                <input
-                  id="search"
-                  name="search"
-                  type="search"
-                  placeholder="Search"
-                  className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-300 placeholder:text-gray-400 focus:bg-white focus:text-gray-900 focus:ring-0 sm:text-sm sm:leading-6"
-                />
+                <form onSubmit={() => handleSubmit()} className="block">
+                  <input
+                    id="search"
+                    name="search"
+                    onChange={() => handleChange()}
+                    type="search"
+                    placeholder="Search"
+                    className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-300 placeholder:text-gray-400 focus:bg-white focus:text-gray-900 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </form>
               </div>
             </div>
           </div>
@@ -119,15 +136,16 @@ export default function Navbar() {
             isLoggedIn ? (
               <div className="hidden lg:ml-4 lg:block">
             <div className="flex items-center">
-              <button
-                type="button"
+              <Link
+                href="/notification"
                 className="relative flex-shrink-0 rounded-full p-1 text-white hover:text-gray focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
               >
                 <span className="absolute -inset-1.5" />
                 <span className="sr-only">View notifications</span>
+                <p className="absolute bottom-0 right-0 top-4 px-1 bg-red-500 pb-0 rounded-full text-white text-xs text-center font-bold">{products?.length}</p>
                 <BellIcon aria-hidden="true" className="h-6 w-6" />
 
-              </button>
+              </Link>
 
               <Link
                 href="/cart"
@@ -238,17 +256,18 @@ export default function Navbar() {
               />
             </div>
             <div className="ml-3">
-              <div className="text-base font-medium text-white">Tom Cook</div>
-              <div className="text-sm font-medium text-slate-100">tom@example.com</div>
+              <div className="text-base font-medium text-white">{user && user?.userName?.capitalize()}</div>
+              <div className="text-sm font-medium text-slate-100">{user && user?.email}</div>
             </div>
-            <button
-              type="button"
+            <Link
+              href="/notification"
               className="relative ml-auto flex-shrink-0 rounded-full p-1 text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
             >
               <span className="absolute -inset-1.5" />
               <span className="sr-only">View notifications</span>
+              <p className="absolute bottom-0 right-0 top-4 px-1 bg-red-500 pb-0 rounded-full text-white text-xs text-center font-bold">{products?.length}</p>
               <BellIcon aria-hidden="true" className="h-6 w-6" />
-            </button>
+            </Link>
 
             <Link
                 href="/cart"
@@ -256,6 +275,7 @@ export default function Navbar() {
               >
                 <span className="absolute -inset-1.5" />
                 <span className="sr-only">View cart</span>
+                <p className="absolute bottom-0 right-0 top-4 px-1 bg-red-500 pb-0 rounded-full text-white text-xs text-center font-bold">{products?.length}</p>
                 <ShoppingCartIcon aria-hidden="true" className="h-6 w-6 " />
 
               </Link>
