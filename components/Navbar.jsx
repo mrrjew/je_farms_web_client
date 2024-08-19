@@ -187,7 +187,7 @@ export default function Navbar() {
                     </a>
                   </MenuItem>
                   <MenuItem>
-                    <button onClick={logout} className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
+                    <button onClick={() => logout()} className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
                       Sign out
                     </button>
                   </MenuItem>

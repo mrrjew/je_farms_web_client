@@ -39,7 +39,7 @@ export default function About() {
       </div>
 
       {/* About Us Section */}
-      <section className="container mx-auto my-10 py-12 w-full sm:w-[50%] flex max-lg:flex-col items-center">
+      <section className="container mx-auto my-10 py-12 w-full sm:w-[80%] sm:gap-20 flex max-lg:flex-col items-center">
         <div>
         <h2 className="text-4xl font-bold text-left mb-2">
           Learn about our journey in{" "}<br />
@@ -47,7 +47,7 @@ export default function About() {
         </h2>
         <div className="flex flex-col">
           <div className="p-4">
-          <p className="text-lg mb-4 w-full sm:w-2/3">
+          <p className="text-lg mb-4 w-full sm:w-full">
       At JE Farms, our journey in coconut plantation began with a passion for sustainable farming and a commitment to quality. Over the years, we have cultivated a rich heritage of coconut farming, embracing traditional methods while integrating modern agricultural practices. Our plantations are located in fertile regions, where the climate and soil conditions are ideal for growing premium coconuts.
 
     </p>

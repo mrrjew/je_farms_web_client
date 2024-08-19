@@ -59,7 +59,7 @@ export default function Page() {
   return (
     <div className='flex max-md:flex-col items-center flex-row-reverse justify-center w-full h-full absolute top-0 left-0 bg-gradient-to-tr from-[#326B23]/70 at-[50%] to-[#79513E]/70 px-6'>
       <div className='w-1/4 h-auto relative max-md:mb-28 hidden md:flex'>
-        <Image src="/assets/images/coco_login1.png" alt='Coconut' width={200} height={100} className='ml-2 w-[1000px] lg:mt-[138px] z-10 rounded-2xl'/>
+        <img src="/assets/images/coco_login1.png" alt='Coconut' className='ml-2 w-[1000px] lg:mt-[118px] z-10 rounded-2xl'/>
         <Image src='/assets/images/coco_overlay.png' alt='Coconut Overlay' width={1000} height={100} className='absolute w-max h-max top-0 transform rotate-90'/>
       </div>
 
